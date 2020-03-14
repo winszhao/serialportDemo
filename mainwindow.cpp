@@ -40,12 +40,26 @@ void MainWindow::on_BtnOpen_clicked()
 
 }
 
+void MainWindow::processFrame(QByteArray data)
+{
+    ui->textEdit->append(data.toHex());
+}
+
 void MainWindow::on_serialPort_readyRead()
 {
-    QByteArray recvData=serialPort.readAll();
-
-
-    ui->TexitRecv->append(recvData.toHex());
+    QByteArray recvData = serialPort.readAll();
+    if (recvData.size() >= 3) {
+        for (int i = 0; i < recvData.length(); i++) {
+            if (recvData.at(i) == 0x01 && recvData.at(i + 1) == 0x03 && recvData.at(i + 2) == 0x0A) {
+                if (recvData.length() - i >= 15) {
+                    fullFrame = recvData.mid(i, 15);
+                    processFrame(fullFrame);
+                    i = i + 15;
+                } else {
+                }
+            }
+        }
+    }
 }
 
 void MainWindow::on_BtnClose_clicked()

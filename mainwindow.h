@@ -17,6 +17,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
 private slots:
 
 
@@ -26,7 +27,9 @@ private slots:
     void on_BtnClose_clicked();
 
 private:
+    void processFrame(QByteArray data);
     Ui::MainWindow *ui;
     QSerialPort serialPort;
+    QByteArray fullFrame;
 };
 #endif // MAINWINDOW_H
